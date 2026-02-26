@@ -67,10 +67,7 @@ public class OrderController {
         Optional<User> currentUser = userService.getUserByEmail(username);
         if (currentUser.isEmpty() || (!"ADMIN".equals(role) && !currentUser.get().getUserId().equals(userId))) {
              return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access Denied"));
-        }e Long userId, HttpServletRequest request) {
-        // Ensure user can only see their own history
-        // String username = (String) request.getAttribute("username");
-        // TODO: Validate that username belongs to userId
+        }
         
         return ResponseEntity.ok(orderService.getOrderHistory(userId));
     }

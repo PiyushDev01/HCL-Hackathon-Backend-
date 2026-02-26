@@ -27,7 +27,7 @@ public class UserController {
                 user.setRole("CUSTOMER");
             }
             User registeredUser = userService.registerUser(user);
-            return ResponseEntity.ok(Map.of("message", "User registered successfully", "userId", registeredUser.getUserId()));
+            return ResponseEntity.ok(registeredUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
@@ -43,9 +43,7 @@ public class UserController {
             User u = user.get();
             String token = jwtUtil.generateToken(email, u.getRole());
             return ResponseEntity.ok(Map.of(
-                "message", "Login successful",
-                "userId", u.getUserId(),
-                "role", u.getRole(),
+                "user", u,
                 "token", token
             ));
         } else {
