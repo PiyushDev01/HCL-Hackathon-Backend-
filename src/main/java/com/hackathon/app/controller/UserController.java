@@ -43,7 +43,6 @@ public class UserController {
             User u = user.get();
             String token = jwtUtil.generateToken(email, u.getRole());
             return ResponseEntity.ok(Map.of(
-                "user", u,
                 "token", token
             ));
         } else {
