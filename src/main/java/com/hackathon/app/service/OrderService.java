@@ -84,4 +84,8 @@ public class OrderService {
     public List<Order> getOrderHistory(Long userId) {
         return orderRepository.findByUserUserId(userId);
     }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
 }

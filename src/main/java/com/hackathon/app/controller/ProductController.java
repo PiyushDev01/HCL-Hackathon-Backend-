@@ -3,7 +3,9 @@ package com.hackathon.app.controller;
 import com.hackathon.app.model.Category;
 import com.hackathon.app.model.Product;
 import com.hackathon.app.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,12 +35,20 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+    public ResponseEntity<?> addProduct(@RequestBody Product product, HttpServletRequest request) {
+        String role = (String) request.getAttribute("role");
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: Only Admins can add products");
+        }
         return ResponseEntity.ok(productService.addProduct(product));
     }
 
     @PostMapping("/category/add")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+    public ResponseEntity<?> addCategory(@RequestBody Category category, HttpServletRequest request) {
+        String role = (String) request.getAttribute("role");
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: Only Admins can add categories");
+        }
         return ResponseEntity.ok(productService.addCategory(category));
     }
 }

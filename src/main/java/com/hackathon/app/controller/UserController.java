@@ -23,8 +23,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
+            if (user.getRole() == null || user.getRole().isEmpty()) {
+                user.setRole("CUSTOMER");
+            }
             User registeredUser = userService.registerUser(user);
-            return ResponseEntity.ok(registeredUser);
+            return ResponseEntity.ok(Map.of("message", "User registered successfully", "userId", registeredUser.getUserId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
@@ -37,9 +40,12 @@ public class UserController {
         
         Optional<User> user = userService.loginUser(email, password);
         if (user.isPresent()) {
-            String token = jwtUtil.generateToken(email);
+            User u = user.get();
+            String token = jwtUtil.generateToken(email, u.getRole());
             return ResponseEntity.ok(Map.of(
-                "user", user.get(),
+                "message", "Login successful",
+                "userId", u.getUserId(),
+                "role", u.getRole(),
                 "token", token
             ));
         } else {
